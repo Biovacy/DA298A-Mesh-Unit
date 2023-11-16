@@ -39,7 +39,7 @@ void sendMessageBroadcast(String messageType, String message, int grid_position_
   DynamicJsonDocument doc(1400);
 
   doc["from"]             = mesh.getNodeId();
-  doc["to"]               = "broadcast";
+  doc["to"]               = 0;    // A broadcast has the ID of 0
   doc["messageType"]      = messageType;
   doc["message"]          = message;
   doc["grid_position_x"]  = grid_position_x;
@@ -62,6 +62,7 @@ void receiveMessageCallback( uint32_t from, String &msg ) {
   DynamicJsonDocument doc(1400);
   deserializeJson(doc, msg);
 
+  uint32_t to         = doc["to"]; // This will be a zero if the message is a broadcast!
   String messageType  = doc["messageType"];
   String message      = doc["message"];
   int grid_position_x = doc["grid_position_x"];
@@ -89,10 +90,10 @@ void changedConnectionCallback() {
 }
 
 void log(String logType, String logMessage) {
-  String logInsert = logType + ":" + logMessage;
+  String logTypeConfig =  "LOG:" + logType;
 
   sendMessageBroadcast(
-    "LOG", logInsert,
+    logTypeConfig, logMessage,
     NULL, NULL, NULL, NULL, NULL, NULL, NULL  // These values are not used in logging.
   );
 }
