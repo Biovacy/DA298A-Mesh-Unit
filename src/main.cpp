@@ -11,6 +11,7 @@ painlessMesh mesh;
 
 void sendMessageBroadcast(String messageType, String message, int grid_position_x, int grid_position_y, bool need_charge, int priority, int queue_position, uint32_t ante, uint32_t post);
 void sendMessage(); // Debug: to be removed
+void log(String logType, String logMessage);
 
 Task taskSendMessage(TASK_SECOND * 1 , TASK_FOREVER, &sendMessage); // Debug: To be removed.
 
@@ -18,17 +19,22 @@ void sendMessage() {
   /**
     * This is a debug-function which is going to be removed.
   */
-    sendMessageBroadcast(
-      "Debug",
-      "Hello, me name Galiano!",
-      10,
-      10,
-      true,
-      10,
-      5,
-      NULL,
-      NULL
-    );
+
+  /*
+  sendMessageBroadcast("message", "Message A", 10, 10, true, 10, 5, NULL, NULL);
+  */
+  int random_num = random(0, 10);
+  if (random_num == 0) { log("error", "Division by zero"); }
+  if (random_num == 1) { log("error", "Out of bounds"); }
+  if (random_num == 2) { log("error", "Stack overflow"); }
+  if (random_num == 3) { log("info", "i am bored"); }
+  if (random_num == 4) { log("info", "who let the dogs out"); }
+  if (random_num == 5) { log("info", "i refuse to send messages"); }
+  if (random_num == 6) { sendMessageBroadcast("message", "Message A", 0, 4, true, 10, 5, NULL, NULL); }
+  if (random_num == 7) { sendMessageBroadcast("message", "Message B", 4, 3, true, 10, 5, NULL, NULL); }
+  if (random_num == 8) { sendMessageBroadcast("message", "Message C", 9, 9, true, 10, 5, NULL, NULL); }
+  if (random_num == 9) { sendMessageBroadcast("message", "Message D", 5, 6, true, 10, 5, NULL, NULL); }
+  
 }
 
 void sendMessageBroadcast(String messageType, String message, int grid_position_x, int grid_position_y, bool need_charge, int priority, int queue_position, uint32_t ante, uint32_t post) {
