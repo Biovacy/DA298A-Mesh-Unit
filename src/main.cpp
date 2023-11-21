@@ -37,7 +37,7 @@ void sendMessage() {
   
 }
 
-void sendMessageBroadcast(String messageType, String message, int grid_position_x, int grid_position_y, bool need_charge, int priority, int queue_position, uint32_t ante, uint32_t post) {
+void sendMessageBroadcast(String messageType, String message, int grid_position_x, int grid_position_y, bool need_charge, double priority, int queue_position, uint32_t ante, uint32_t post) {
   /**
     * This function broadcast a message to all other nodes in the peer-to-peer network. 
   */
@@ -74,7 +74,7 @@ void receiveMessageCallback( uint32_t from, String &msg ) {
   int grid_position_x = doc["grid_position_x"];
   int grid_position_y = doc["grid_position_y"];
   bool need_charge    = doc["need_charge"];
-  int priority        = doc["priority"];
+  double priority        = doc["priority"];
   int queue_position  = doc["queue_position"];
   uint32_t ante       = doc["ante"]; 
   uint32_t post       = doc["post"];
@@ -84,6 +84,7 @@ void receiveMessageCallback( uint32_t from, String &msg ) {
   Serial.println(fixed_message);
 
   // ADD CODE HERE BELOW
+
 }
 
 void newConnectionCallback(uint32_t nodeId) {
@@ -95,12 +96,23 @@ void changedConnectionCallback() {
   mesh.sendBroadcast( "announcingLogger" );
 }
 
-void log(String logType, String logMessage) {
+void log(String logType, String logMessage, int x, int y, bool needs_charge, double priority, int queue_position, uint32_t ante, uint32_t post)
+{
+  /*
+   * This function sends the logType and logMessage to the logging-server. 
+   * The other variables such as x, y, needs_charge, priority, queue_position, ante and post 
+   * is needed to update all the variables in the logging-server. These can be set to NULL
+   * if the variable is not set or should be ignored by the logging-server.
+   * logType and logMessage can not be NONE.
+  */
   String logTypeConfig =  "LOG:" + logType;
 
   sendMessageBroadcast(
-    logTypeConfig, logMessage,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL  // These values are not used in logging.
+    logTypeConfig, 
+    logMessage,
+    
+    // These can be set to NULL if they should be ignored by the logging-server
+    x, y, needs_charge, priority, queue_position, ante, post
   );
 }
 
